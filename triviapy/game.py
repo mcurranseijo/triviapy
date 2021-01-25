@@ -37,6 +37,7 @@ class Game(object):
         """
             Use this to get questions, takes in a catgegory 
         """
+        url = None
         if self.token and category:
             url = QUESTION_TOKEN.format(qty,self.token,category)
         elif not self.token and category:
