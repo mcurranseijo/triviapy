@@ -1,22 +1,21 @@
-class TokenError(ValueError):
-    def __init__(self):
-        self.strerror = "TokenError"
-        self.args = {"A token could not be generated."}
+class TokenError(Exception):
+    def __repr__(self) -> str:
+        return "A token could not be generated."
 
 
-class QuestionError(ValueError):
-    def __init__(self):
-        self.strerror = "QuestionError"
-        self.args = {"Not enough questions avaliable."}
+class QuestionError(Exception):
+    def __repr__(self) -> str:
+        return "Not enough questions available."
 
 
-class InvalidTokenError(ValueError):
-    def __init__(self):
-        self.strerror = "InvalidToken"
-        self.args = {"Token is invalid or has expired."}
+class InvalidTokenError(Exception):
+    def __repr__(self) -> str:
+        return "Token is invalid or has expired."
 
 
-class CategoryError(ValueError):
-    def __init__(self):
-        self.strerror = "CategoryError"
-        self.args = {"Category given is invalid"}
+class CategoryError(Exception):
+    def __init__(self, category: int):
+        self.category = category
+
+    def __repr__(self) -> str:
+        return f"Category {self.category} is invalid."

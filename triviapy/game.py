@@ -46,7 +46,7 @@ class Game(object):
         if data["response_code"] == 1:
             raise QuestionError
         elif data["response_code"] == 2:
-            raise CategoryError
+            raise CategoryError(category)
         elif data["response_code"] == 3:
             raise InvalidTokenError
         elif data["response_code"] == 4:
