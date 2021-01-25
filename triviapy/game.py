@@ -1,5 +1,6 @@
 from random import shuffle
 from html import unescape
+import typing as _t
 
 from .utils import request_json
 from .errors import TokenError, QuestionError, InvalidTokenError, CategoryError
@@ -11,7 +12,13 @@ class Game(object):
     def __init__(self):
         self.token = ""
 
-    async def catetgories(self):
+    def _format_url(self, amount: int, category: int) -> str:
+        url = QUESTION_BASIC.format(amount=amount, category=category)
+        if self.token:
+            url += f"&token={self.token}"
+        return url
+
+    async def categories(self):
         """
         Returns an array of tuples with the category and their id's used to request them.
         """
@@ -35,12 +42,10 @@ class Game(object):
 
     async def round(self, qty=1, category=0):
         """
-        Use this to get questions, takes in a catgegory
+        Use this to get questions, takes in a category
         """
-        if self.token and category:
-            url = QUESTION_TOKEN.format(qty, self.token, category)
-        elif not self.token and category:
-            url = QUESTION_BASIC.format(qty, category)
+        url = self._format_url(qty, category)
+
         data = await request_json(url)
 
         if data["response_code"] == 1:
