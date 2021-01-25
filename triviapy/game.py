@@ -1,4 +1,5 @@
 from random import shuffle
+from html import unescape
 
 from .utils import request_json
 from .errors import TokenError, QuestionError, InvalidTokenError, CategoryError
@@ -32,17 +33,14 @@ class Game(object):
         else:
             raise TokenError
 
-    async def round(self, qty=1, category=None):
+    async def round(self, qty=1, category=0):
+        """
+            Use this to get questions, takes in a catgegory 
+        """
         if self.token and category:
             url = QUESTION_TOKEN.format(qty,self.token,category)
-        elif self.token and not category:
-            url = QUESTION_TOKEN.format(qty,self.token,category).replace('&category=None','')
         elif not self.token and category:
             url = QUESTION_BASIC.format(qty, category)
-        elif not self.token and not category:
-            print(QUESTION_BASIC)
-            url = QUESTION_BASIC.format(qty, category).replace('&category=None','')
-        print(url)
         data = await request_json(url)
         
         if data['response_code'] == 1:
@@ -61,11 +59,11 @@ class Game(object):
             shuffle(answers)
             questions.append(
                 Question(
-                    question = question['question'],
-                    answer=question['correct_answer'],
-                    answers=answers,
-                    category=question['category'],
-                    difficulty=question['difficulty']
+                    question = unescape(question['question']),
+                    answer= unescape(question['correct_answer']),
+                    answers= unescape(answers),
+                    category= unescape(question['category']),
+                    difficulty= unescape(question['difficulty'])
                     )
             )
         
@@ -74,6 +72,21 @@ class Game(object):
         else:
             return questions[0]
             
+    async def reset(self):
+        """
+            Use this to reset a token and allow old questions to be seen again.
+        """
+        if not self.token:
+            return
+
+        url = RESET_URL.format(self.token)
+        print(url)
+        data = await request_json(RESET_URL.format(self.token))
+        
+        if data['response_code'] == 0:
+            self.token  = data['token']
+        else:
+            raise TokenError
 
 
 
