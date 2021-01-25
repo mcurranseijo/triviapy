@@ -1,11 +1,9 @@
 from random import shuffle
 from html import unescape
-import typing as _t
 
-from .utils import request_json
-from .errors import TokenError, QuestionError, InvalidTokenError, CategoryError
-from .question import Question
-from .urls import TOKEN_URL, RESET_URL, CATEGORY_URL, QUESTION_BASIC, QUESTION_TOKEN
+from triviapy import errors, urls
+from triviapy.utils import request_json
+from triviapy.question import Question
 
 
 class Game(object):
@@ -13,7 +11,7 @@ class Game(object):
         self.token = ""
 
     def _format_url(self, amount: int, category: int) -> str:
-        url = QUESTION_BASIC.format(amount=amount, category=category)
+        url = urls.QUESTION_URL.format(amount=amount, category=category)
         if self.token:
             url += f"&token={self.token}"
         return url
@@ -22,7 +20,7 @@ class Game(object):
         """
         Returns an array of tuples with the category and their id's used to request them.
         """
-        data = await request_json(CATEGORY_URL)
+        data = await request_json(urls.CATEGORY_URL)
         categories = []
 
         for category in data["trivia_categories"]:
@@ -33,29 +31,29 @@ class Game(object):
         """
         Use this to generate a token, this is an optional step but will keep questions from repeating.
         """
-        data = await request_json(TOKEN_URL)
+        data = await request_json(urls.TOKEN_URL)
 
         if data["response_code"] == 0:
             self.token = data["token"]
         else:
-            raise TokenError
+            raise errors.TokenError
 
-    async def round(self, qty=1, category=0):
+    async def round(self, quantity: int = 1, category: int = 0):
         """
         Use this to get questions, takes in a category
         """
-        url = self._format_url(qty, category)
+        url = self._format_url(quantity, category)
 
         data = await request_json(url)
 
         if data["response_code"] == 1:
-            raise QuestionError
+            raise errors.QuestionError
         elif data["response_code"] == 2:
-            raise CategoryError(category)
+            raise errors.CategoryError(category)
         elif data["response_code"] == 3:
-            raise InvalidTokenError
+            raise errors.InvalidTokenError
         elif data["response_code"] == 4:
-            raise QuestionError
+            raise errors.QuestionError
 
         questions = []
         for question in data["results"]:
@@ -84,11 +82,11 @@ class Game(object):
         if not self.token:
             return
 
-        url = RESET_URL.format(self.token)
+        url = urls.RESET_URL.format(self.token)
         print(url)
-        data = await request_json(RESET_URL.format(self.token))
+        data = await request_json(urls.RESET_URL.format(self.token))
 
         if data["response_code"] == 0:
             self.token = data["token"]
         else:
-            raise TokenError
+            raise errors.TokenError
