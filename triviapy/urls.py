@@ -1,5 +1,5 @@
-TOKEN_URL = 'https://opentdb.com/api_token.php?command=request'
-RESET_URL = 'https://opentdb.com/api_token.php?command=reset&token={}'
-QUESTION_TOKEN = 'https://opentdb.com/api.php?amount={}&token={}&category={}&type=multiple'
-QUESTION_BASIC = 'https://opentdb.com/api.php?amount={}&category={}&type=multiple'
-CATEGORY_URL = 'https://opentdb.com/api_category.php'
+TOKEN_URL = "https://opentdb.com/api_token.php?command=request"
+RESET_URL = "https://opentdb.com/api_token.php?command=reset&token={}"
+QUESTION_TOKEN = "https://opentdb.com/api.php?amount={}&token={}&category={}&type=multiple"
+QUESTION_BASIC = "https://opentdb.com/api.php?amount={}&category={}&type=multiple"
+CATEGORY_URL = "https://opentdb.com/api_category.php"

@@ -1,5 +1,3 @@
-from .utils import request_json
-
 class Question(object):
     def __init__(self, question, answer, answers, category, difficulty):
         self.question = question
