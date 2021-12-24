@@ -67,7 +67,7 @@ This error will occur if the number of questions exceeds that avaliable, when th
 
 
 ### InvalidTokenError
-This error is raised due to an invalid or expired token, an api token will expire after 6 hours of no use. Do ``await game.gen_token``` to reset this.
+This error is raised due to an invalid or expired token, an api token will expire after 6 hours of no use. Do ```await game.gen_token``` to reset this.
 
 ### CategoryError:
 This error will occur if an invalid int is defined for a round category. To fix this double check what you are putting in.
